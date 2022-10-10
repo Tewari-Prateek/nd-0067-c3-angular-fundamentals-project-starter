@@ -1,0 +1,129 @@
+<div class="cart-container">
+  <div class="cart-panel">
+    <div *ngFor="let productItem of shoppingCartList">
+      <div class="cart-item">
+        <img class="img" src="{{ productItem.product.url }}" />
+        <div class="cart-item-details">
+          <p>
+            <strong>{{ productItem.product.name }}</strong>
+          </p>
+          <p>{{ productItem.product.price }}</p>
+          <div style="display: inline">
+            <label>Amount: </label
+            ><input
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              max="10"
+              [(ngModel)]="productItem.quantity"
+              (ngModelChange)="onQuantityChange()"
+            />
+          </div>
+          <p>
+            <button (click)="removeFromShoppingCart(productItem)">
+              Remove
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="empty-cart-message" *ngIf="shoppingCartList.length === 0">
+      <div>
+        <img class="empty-cart-image" src="{{ emptyCartImagePath }}" />
+        <h1
+          class="warnings"
+          [ngStyle]="{ background: 'red' }"
+          [ngStyle]="{ 'text-align': 'center' }"
+        >
+          Your cart is empty. Let's do some shopping!!!
+        </h1>
+      </div>
+    </div>
+    <h3>
+      <div *ngIf="totalPrice > 0" class="price">
+        Total: {{ totalPrice.toFixed(2) }}
+      </div>
+    </h3>
+  </div>
+
+  <form
+    class="form-margin"
+    #form="ngForm"
+    *ngIf="shoppingCartList.length > 0"
+    (ngSubmit)="onSubmit()"
+  >
+    <h3>Full name</h3>
+    <input
+      type="text"
+      name="fullNameinput"
+      id="fullNameinput"
+      required
+      minlength="3"
+      placeholder="(minimum 3 characters)"
+      [(ngModel)]="name"
+      #fullNameInput="ngModel"
+    />
+    <div *ngIf="fullNameInput.invalid && fullNameInput.dirty">
+      <div *ngIf="fullNameInput.errors?.['required']">
+        <p class="warnings">Please provide your name.</p>
+      </div>
+      <div *ngIf="fullNameInput.errors?.['minlength']">
+        <p class="warnings">The name must be at least 3 characters.</p>
+      </div>
+    </div>
+    <h3>Address</h3>
+    <input
+      type="text"
+      name="addressInput"
+      id="addressInput"
+      required
+      minlength="6"
+      placeholder="(minimum 6 characters)"
+      [(ngModel)]="address"
+      #addressInput="ngModel"
+    />
+    <div *ngIf="addressInput.invalid && addressInput.dirty">
+      <div *ngIf="addressInput.errors?.['required']">
+        <p class="warnings">Please provide the address.</p>
+      </div>
+      <div *ngIf="addressInput.errors?.['minlength']">
+        <p class="warnings">The address must be at least 6 characters.</p>
+      </div>
+    </div>
+    <h3>Credit card number</h3>
+    <input
+      class="number-input"
+      type="text"
+      name="creditCardInput"
+      id="creditCardInput"
+      required
+      minlength="16"
+      maxlength="16"
+      placeholder="(16-digit-number)"
+      pattern="[0-9]{16}"
+      [(ngModel)]="creditCard"
+      #creditCardInput="ngModel"
+    />
+    <div *ngIf="creditCardInput.invalid && creditCardInput.dirty">
+      <div *ngIf="creditCardInput.errors?.['required']">
+        <p class="warnings">Please input your credit card number.</p>
+      </div>
+      <div
+        *ngIf="creditCardInput.errors?.['minlength'] || creditCardInput.errors?.['maxlength']"
+      >
+        <p class="warnings">The credit card number must be 16 characters.</p>
+      </div>
+      <div
+        *ngIf="creditCardInput.errors?.['pattern'] || creditCardInput.errors?.['maxlength']"
+      >
+        <p class="warnings">The credit card number must only be numbers.</p>
+      </div>
+    </div>
+    <h3 [ngStyle]="{ color: 'green' }">
+      Your payment details are safe with us.
+    </h3>
+
+    <button [disabled]="form.invalid" type="submit">Submit</button>
+  </form>
+</div>
